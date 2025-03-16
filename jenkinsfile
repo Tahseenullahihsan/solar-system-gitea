@@ -19,21 +19,20 @@ pipeline {
                     }
                 }
 
-                stage('OWASP Dependency Check') {
-                    steps {
-                        script {
-                            sh '''
-                            OWASP --project "MyProject" \
-                            --scan ./ \
-                            --format ALL \
-                            --out ./ \
-                            --prettyPrint \
-                            --odcInstallation "OWASP"
-                            '''
-                        }
-                    }
-                }
-            } // ✅ Closing parallel block correctly
+              stage('OWASP Dependency Check') {
+    steps {
+        script {
+            sh '''
+            dependency-check.sh --project "MyProject" \
+            --scan ./ \
+            --format ALL \
+            --out ./ \
+            --prettyPrint
+            '''
+        }
+    }
+}
+// ✅ Closing parallel block correctly
         }
 
         stage('Test') {
