@@ -16,6 +16,21 @@ pipeline{
                 sh 'npm audit --audit-level=critical'
             }
         }
+       stage('OWASP Dependency Check') {
+    steps {
+        script {
+            sh '''
+            OWASP_dependancy-chek-10 --project "MyProject" \
+            --scan ./ \
+            --format ALL \
+            --out ./ \
+            --prettyPrint \
+            --odcInstallation "OWASP-dependancy-chek-10"
+            '''
+        }
+    }
+}
+
         stage('Test'){
             steps{
                 echo 'Testing the app'
