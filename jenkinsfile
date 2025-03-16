@@ -23,12 +23,12 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            OWASP-dependancy-10 --project "MyProject" \
+                            OWASP --project "MyProject" \
                             --scan ./ \
                             --format ALL \
                             --out ./ \
                             --prettyPrint \
-                            --odcInstallation "OWASP-dependancy-10"
+                            --odcInstallation "OWASP"
                             '''
                         }
                     }
