@@ -25,7 +25,7 @@ pipeline{
             --format ALL \
             --out ./ \
             --prettyPrint \
-            --odcInstallation "OWASP-dependancy-chek-10"
+            --odcInstallation "OWASP-dependany_chek-10"
             '''
         }
     }
