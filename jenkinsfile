@@ -3,7 +3,10 @@ pipeline{
     stages{
         stage('cheking  the npm and node version '){
             steps{
-                echo 'the nps and node version is there'
+                sh '''
+                    npm -v
+                    node -v
+                '''
             }
         }
         stage('Test'){
