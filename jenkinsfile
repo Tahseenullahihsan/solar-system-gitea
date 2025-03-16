@@ -6,12 +6,9 @@ pipeline{
     
 
     stages{
-        stage('cheking  the npm and node version '){
+        stage('installing dependancies'){
             steps{
-                sh '''
-                    npm -v
-                    node -v
-                '''
+                sh 'npm install --no-audit'
             }
         }
         stage('Test'){
