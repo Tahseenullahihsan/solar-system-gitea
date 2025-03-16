@@ -1,23 +1,24 @@
-pipeline{
+pipeline {
     agent any
     tools {
         nodejs 'Nodejs22-6-0'
     }
-    
 
-    stages{
-        stage('installing dependancies'){
-            steps{
+    stages {
+        stage('installing dependencies') {
+            steps {
                 sh 'npm install --no-audit'
             }
         }
-        stage('npm-dependancy_parallel'){
-            parallel{
-                stage('npm dependancy check'){
-                    steps{
+
+        stage('npm-dependency_parallel') {
+            parallel {
+                stage('npm dependency check') {
+                    steps {
                         sh 'npm audit --audit-level=critical'
                     }
                 }
+
                 stage('OWASP Dependency Check') {
                     steps {
                         script {
@@ -27,25 +28,24 @@ pipeline{
                             --format ALL \
                             --out ./ \
                             --prettyPrint \
-                            --odcInstallation "OWASP-dependany_chek-10"
+                            --odcInstallation "OWASP_dependany-chek-10"
                             '''
                         }
                     }
                 }
-            }
-          
+            } // ✅ Closing parallel block correctly
+        }
 
-        stage('Test'){
-            steps{
+        stage('Test') {
+            steps {
                 echo 'Testing the app'
             }
         }
-        stage('Deploy'){
-            steps{
+
+        stage('Deploy') {
+            steps {
                 echo 'Deploying the app'
             }
         }
     }
-}
-
 }
