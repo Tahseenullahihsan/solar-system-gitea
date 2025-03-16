@@ -1,5 +1,10 @@
 pipeline{
     agent any
+    tools {
+        nodejs 'Nodejs22-6-0'
+    }
+    
+
     stages{
         stage('cheking  the npm and node version '){
             steps{
