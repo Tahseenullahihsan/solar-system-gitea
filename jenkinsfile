@@ -1,0 +1,20 @@
+pipeline{
+    agent any
+    stages{
+        stage('cheking  the npm and node version '){
+            steps{
+                echo 'the nps and node version is there'
+            }
+        }
+        stage('Test'){
+            steps{
+                echo 'Testing the app'
+            }
+        }
+        stage('Deploy'){
+            steps{
+                echo 'Deploying the app'
+            }
+        }
+    }
+}
