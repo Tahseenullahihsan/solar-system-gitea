@@ -11,25 +11,29 @@ pipeline{
                 sh 'npm install --no-audit'
             }
         }
-           stage('npm dependancy check'){
-            steps{
-                sh 'npm audit --audit-level=critical'
+        stage('npm-dependancy_parallel'){
+            parallel{
+                stage('npm dependancy check'){
+                    steps{
+                        sh 'npm audit --audit-level=critical'
+                    }
+                }
+                stage('OWASP Dependency Check') {
+                    steps {
+                        script {
+                            sh '''
+                            OWASP_dependancy-chek-10 --project "MyProject" \
+                            --scan ./ \
+                            --format ALL \
+                            --out ./ \
+                            --prettyPrint \
+                            --odcInstallation "OWASP-dependany_chek-10"
+                            '''
+                        }
+                    }
+                }
             }
-        }
-       stage('OWASP Dependency Check') {
-    steps {
-        script {
-            sh '''
-            OWASP_dependancy-chek-10 --project "MyProject" \
-            --scan ./ \
-            --format ALL \
-            --out ./ \
-            --prettyPrint \
-            --odcInstallation "OWASP-dependany_chek-10"
-            '''
-        }
-    }
-}
+          
 
         stage('Test'){
             steps{
@@ -42,4 +46,6 @@ pipeline{
             }
         }
     }
+}
+
 }
