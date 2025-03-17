@@ -21,18 +21,11 @@ pipeline {
                     }
                 }
 
-                stage('OWASP Dependency Check') {
+               stage('OWASP Dependency Check') {
     steps {
-        script {
-            sh '''
-            /var/lib/jenkins/tools/org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/OWASP/dependency-check.sh \
-            --project "MyProject" \
-            --scan ./ \
-            --format ALL \
-            --out ./ \
-            --prettyPrint
-            '''
-        }
+        dependencyCheck additionalArguments: '''--format ALL
+--scan ./
+--prettyPrint''', odcInstallation: 'OWASP'
     }
 } // ✅ Closing parallel block correctly
             }
