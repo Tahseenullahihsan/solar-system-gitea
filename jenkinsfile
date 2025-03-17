@@ -10,6 +10,18 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
+        stage('Debug OWASP Installation') {
+    steps {
+        script {
+            sh '''
+            echo "Checking OWASP Dependency Check path..."
+            which dependency-check.sh
+            find /var/lib/jenkins/tools/ -name dependency-check.sh
+            '''
+        }
+    }
+}
+
 
         stage('npm-dependency_parallel') {
             parallel {
