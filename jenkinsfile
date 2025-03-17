@@ -10,17 +10,7 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
-        stage('Debug OWASP Installation') {
-    steps {
-        script {
-            sh '''
-            echo "Checking OWASP Dependency Check path..."
-            which dependency-check.sh
-            find /var/lib/jenkins/tools/ -name dependency-check.sh
-            '''
-        }
-    }
-}
+        
 
 
         stage('npm-dependency_parallel') {
@@ -32,19 +22,20 @@ pipeline {
                 }
 
                 stage('OWASP Dependency Check') {
-                    steps {
-                        script {
-                            sh '''
-                            dependency-check.sh --project "MyProject" \
-                            --scan ./ \
-                            --format ALL \
-                            --out ./ \
-                            --prettyPrint
-                            '''
-                        }
-                    }
-                }
-            } // ✅ Closing parallel block correctly
+    steps {
+        script {
+            sh '''
+            /var/lib/jenkins/tools/org.jenkinsci.plugins.DependencyCheck.tools.DependencyCheckInstallation/OWASP/dependency-check.sh \
+            --project "MyProject" \
+            --scan ./ \
+            --format ALL \
+            --out ./ \
+            --prettyPrint
+            '''
+        }
+    }
+} // ✅ Closing parallel block correctly
+            }
         }
 
         stage('Test') {
