@@ -60,6 +60,8 @@ stage('SonarQube Static Analysis') {
           -Dsonar.sources=. \
           -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
           -Dsonar.host.url=http://172.18.86.241:9000 \
+          -Dsonar.qualitygate.wait=true \
+          -Dsonar.issuesReport.console.enable=true
           -Dsonar.token=sqp_0f0ddebbb0788c6d0f47516980a321ceb9a1aa99
         '''
     }
