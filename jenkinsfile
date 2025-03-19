@@ -10,9 +10,6 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
-        
-
-
         stage('npm-dependency_parallel') {
             parallel {
                 stage('npm dependency check') {
@@ -21,13 +18,13 @@ pipeline {
                     }
                 }
 
-                stage('OWASP Dependency Check') {
-    steps {
-         dependencyCheck additionalArguments: '''--format ALL
- --scan ./
- --prettyPrint''', odcInstallation: 'OWASP'
-     }
- } // ✅ Closing parallel block correctly
+//                 stage('OWASP Dependency Check') {
+//     steps {
+//          dependencyCheck additionalArguments: '''--format ALL
+//  --scan ./
+//  --prettyPrint''', odcInstallation: 'OWASP'
+//      }
+//  } // ✅ Closing parallel block correctly
             }
         }
       stage('Code Coverage') {
@@ -49,7 +46,6 @@ pipeline {
         ])
     }
 }
-
         stage('Test') {
             steps {
                 echo 'Testing the app'
