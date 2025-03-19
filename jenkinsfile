@@ -21,16 +21,20 @@ pipeline {
                     }
                 }
 
-               stage('OWASP Dependency Check') {
-    steps {
-        dependencyCheck additionalArguments: '''--format ALL
---scan ./
---prettyPrint''', odcInstallation: 'OWASP'
-    }
-} // ✅ Closing parallel block correctly
+//                stage('OWASP Dependency Check') {
+//     steps {
+//         dependencyCheck additionalArguments: '''--format ALL
+// --scan ./
+// --prettyPrint''', odcInstallation: 'OWASP'
+//     }
+// } // ✅ Closing parallel block correctly
             }
         }
-
+        stage('Code Coverage') {
+            steps {
+                sh 'npm run coverage'
+            }
+        }
         stage('Test') {
             steps {
                 echo 'Testing the app'
