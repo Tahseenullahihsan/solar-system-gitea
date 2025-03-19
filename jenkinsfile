@@ -59,7 +59,7 @@ stage('SonarQube Static Analysis') {
           -Dsonar.projectKey=solar-sonar \
           -Dsonar.sources=. \
           -Dsonar.host.url=http://172.18.86.241:9000 \
-          -Dsonar.token=sqp_6d6c9dd0808bdd6f3131220d9445f7f7c9300fa2
+          -Dsonar.token=sqp_0f0ddebbb0788c6d0f47516980a321ceb9a1aa99
         '''
     }
 }
