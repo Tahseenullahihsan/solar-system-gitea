@@ -52,18 +52,29 @@ pipeline {
         ])
     }
 }
- stage('SonarQube_satatic Analysis') {
-            steps {
-                sh 'echo $SONAR_SCANNER_HOME '
-                sh '''
-                $SONAR_SCANNER_HOME /bin/sonar-scanner \
-  -Dsonar.projectKey=solar-sonar \
-  -Dsonar.sources=. \
-  -Dsonar.host.url=http://172.18.86.241:9000 \
-  -Dsonar.token=sqp_6d6c9dd0808bdd6f3131220d9445f7f7c9300fa2
-                '''
-            }
-        }
+stage('SonarQube Static Analysis') {
+    steps {
+        sh '''
+        /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube_scaner/bin/sonar-scanner \
+          -Dsonar.projectKey=solar-sonar \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://172.18.86.241:9000 \
+          -Dsonar.token=sqp_6d6c9dd0808bdd6f3131220d9445f7f7c9300fa2
+        '''
+    }
+}
+//  stage('SonarQube_satatic Analysis') {
+//             steps {
+//                 sh 'echo $SONAR_SCANNER_HOME '
+//                 sh '''
+//                 $SONAR_SCANNER_HOME /bin/sonar-scanner \
+//   -Dsonar.projectKey=solar-sonar \
+//   -Dsonar.sources=. \
+//   -Dsonar.host.url=http://172.18.86.241:9000 \
+//   -Dsonar.token=sqp_6d6c9dd0808bdd6f3131220d9445f7f7c9300fa2
+//                 '''
+//             }
+//         }
         stage('Test') {
             steps {
                 echo 'Testing the app'
