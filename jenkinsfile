@@ -61,7 +61,7 @@ stage('SonarQube Static Analysis') {
           -Dsonar.host.url=http://172.18.86.241:9000 \
           -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
           -Dsonar.issuesReport.console.enable=true
-          -Dsonar.token=sqp_2adf12d92d05887da278d2f29080ec070f98c503
+          -Dsonar.token=sqb_72aea71bc2aad9106a8138601fe8f4f414b4a220
         '''
     }
 }
