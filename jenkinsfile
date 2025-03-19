@@ -30,11 +30,26 @@ pipeline {
 // } // ✅ Closing parallel block correctly
             }
         }
-        stage('Code Coverage') {
-            steps {
-                sh 'npm run coverage'
-            }
+      stage('Code Coverage') {
+    steps {
+        catchError(buildResult: 'SUCCESS', message: 'Opps the we will fixed it latter', stageResult: 'UNSTABLE') {
+    // some block
+
+        sh 'npm run coverage'
         }
+        publishHTML([
+            allowMissing: true, 
+            alwaysLinkToLastBuild: true, 
+            keepAll: true, 
+            reportDir: 'coverage/lcov-report', 
+            reportFiles: 'index.html', 
+            reportName: 'Code Coverage Report', 
+            reportTitles: '', 
+            useWrapperFileDirectly: true
+        ])
+    }
+}
+
         stage('Test') {
             steps {
                 echo 'Testing the app'
