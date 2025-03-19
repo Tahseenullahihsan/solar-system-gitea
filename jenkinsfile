@@ -58,6 +58,7 @@ stage('SonarQube Static Analysis') {
         /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube_scaner/bin/sonar-scanner \
           -Dsonar.projectKey=solar-sonar \
           -Dsonar.sources=. \
+          -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
           -Dsonar.host.url=http://172.18.86.241:9000 \
           -Dsonar.token=sqp_0f0ddebbb0788c6d0f47516980a321ceb9a1aa99
         '''
