@@ -55,7 +55,7 @@ pipeline {
 stage('SonarQube Static Analysis') {
     steps {
         timeout(time: 60, unit: 'SECONDS') {
-        withSonarQubeEnv('sonar-qube') {
+        withSonarQubeEnv('Sonar') {
     
 
         sh '''
