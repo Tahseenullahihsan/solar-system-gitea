@@ -3,12 +3,9 @@ pipeline {
     tools {
         nodejs 'Nodejs22-6-0'
     }
-     environment {
-        
+    environment {
         SONAR_SCANNER_HOME = tool 'SonarQube_scaner';
-        
     }
-
 
     stages {
         stage('installing dependencies') {
@@ -16,6 +13,7 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
+        
         stage('npm-dependency_parallel') {
             parallel {
                 stage('npm dependency check') {
@@ -24,67 +22,49 @@ pipeline {
                     }
                 }
 
-//                 stage('OWASP Dependency Check') {
-//     steps {
-//          dependencyCheck additionalArguments: '''--format ALL
-//  --scan ./
-//  --prettyPrint''', odcInstallation: 'OWASP'
-//      }
-//  } // ✅ Closing parallel block correctly
+                // Uncomment if you need OWASP Dependency Check
+                /* stage('OWASP Dependency Check') {
+                    steps {
+                        dependencyCheck additionalArguments: '''--format ALL
+                        --scan ./
+                        --prettyPrint''', odcInstallation: 'OWASP'
+                    }
+                } */
+            } // ✅ Closing parallel block correctly
+        }
+
+        stage('Code Coverage') {
+            steps {
+                catchError(buildResult: 'SUCCESS', message: 'Oops! We will fix it later', stageResult: 'UNSTABLE') {
+                    sh 'npm run coverage'
+                }
+                publishHTML([
+                    allowMissing: true, 
+                    alwaysLinkToLastBuild: true, 
+                    keepAll: true, 
+                    reportDir: 'coverage/lcov-report', 
+                    reportFiles: 'index.html', 
+                    reportName: 'Code Coverage Report', 
+                    reportTitles: '', 
+                    useWrapperFileDirectly: true
+                ])
             }
         }
-      stage('Code Coverage') {
-    steps {
-        catchError(buildResult: 'SUCCESS', message: 'Opps the we will fixed it latter', stageResult: 'UNSTABLE') {
-    // some block
 
-        sh 'npm run coverage'
+        stage('SonarQube Static Analysis') {
+            steps {
+                withSonarQubeEnv('Sonar') {
+                    sh '''
+                    /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube_scaner/bin/sonar-scanner \
+                        -Dsonar.projectKey=solar-sonar \
+                        -Dsonar.sources=. \
+                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+                        -Dsonar.issuesReport.console.enable=true
+                    '''
+                }
+            }
         }
-        publishHTML([
-            allowMissing: true, 
-            alwaysLinkToLastBuild: true, 
-            keepAll: true, 
-            reportDir: 'coverage/lcov-report', 
-            reportFiles: 'index.html', 
-            reportName: 'Code Coverage Report', 
-            reportTitles: '', 
-            useWrapperFileDirectly: true
-        ])
-    }
-}
-stage('SonarQube Static Analysis') {
-    steps {
-//        timeout(time: 120, unit: 'SECONDS') {
-        withSonarQubeEnv('Sonar') {
-    
 
-        sh '''
-        /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube_scaner/bin/sonar-scanner \
-            -Dsonar.projectKey=solar-sonar \
-            -Dsonar.sources=. \
-             -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-             -Dsonar.issuesReport.console.enable=true \
-           
-        '''
-        }
-//         waitForQualityGate abortPipeline: true
-        }
-    }
-}
-//  stage('SonarQube_satatic Analysis') {
-//             steps {
-//                 sh 'echo $SONAR_SCANNER_HOME '
-//                 sh '''
-//                 $SONAR_SCANNER_HOME /bin/sonar-scanner \
-//   -Dsonar.projectKey=solar-sonar \
-//   -Dsonar.sources=. \
-//    -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-//          -Dsonar.issuesReport.console.enable=true
-//   -Dsonar.host.url=http://172.18.86.241:9000 \
-//   -Dsonar.token=sqp_6d6c9dd0808bdd6f3131220d9445f7f7c9300fa2
-//                 '''
-//             }
-//         }
         stage('Test') {
             steps {
                 echo 'Testing the app'
@@ -97,4 +77,4 @@ stage('SonarQube Static Analysis') {
             }
         }
     }
-
+}
