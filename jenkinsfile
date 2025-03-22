@@ -97,4 +97,4 @@ stage('SonarQube Static Analysis') {
             }
         }
     }
-}
+
