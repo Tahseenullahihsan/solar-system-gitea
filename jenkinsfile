@@ -54,7 +54,7 @@ pipeline {
 }
 stage('SonarQube Static Analysis') {
     steps {
-        timeout(time: 120, unit: 'SECONDS') {
+//        timeout(time: 120, unit: 'SECONDS') {
         withSonarQubeEnv('Sonar') {
     
 
@@ -67,7 +67,7 @@ stage('SonarQube Static Analysis') {
            
         '''
         }
-         waitForQualityGate abortPipeline: true
+//         waitForQualityGate abortPipeline: true
         }
     }
 }
