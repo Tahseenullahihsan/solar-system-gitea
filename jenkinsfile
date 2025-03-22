@@ -62,7 +62,6 @@ stage('SonarQube Static Analysis') {
         /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube_scaner/bin/sonar-scanner \
             -Dsonar.projectKey=solar-sonar \
             -Dsonar.sources=. \
-//            the host url is also now not imprtnat 
              -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
              -Dsonar.issuesReport.console.enable=true \
            
