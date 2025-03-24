@@ -137,8 +137,11 @@ pipeline {
                             sudo docker stop solar && sudo docker rm solar
                             echo 'Container stopped and removed.'
                         fi
-                        sudo docker run -d --name solar \
-                            -p 3000:3000  $DOCKER_IMAGE 
+                        sudo docker run -d -p 3000:3000 \
+                       -e MONGO_URI="${MONGO_URI}" \
+                       -e MONGO_USERNAME="${MONGO_USERNAME}" \
+                       -e MONGO_PASSWORD="${MONGO_PASSWORD}" \
+                        tahseen176/solar:latest
                             
                     "
                 '''
