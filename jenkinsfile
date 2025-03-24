@@ -130,7 +130,7 @@ pipeline {
         script {
             sshagent(['jwnkins_ssh']) {
                 sh '''
-                    ssh -i /var/lib/jenkins/.ssh/jenkins.pem -o StrictHostKeyChecking=no ec2-user@54.90.141.116 "
+                    ssh -i /var/lib/jenkins/.ssh/jenkins.pem -o StrictHostKeyChecking=no ec2-user@3.89.36.176 "
                         echo 'Stopping and removing existing container if any...'
                         if sudo docker ps -a | grep -q 'solar'; then
                             echo 'Container found. Stopping...'
