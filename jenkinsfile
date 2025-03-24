@@ -4,8 +4,7 @@ pipeline {
         nodejs 'Nodejs22-6-0'
     }
     environment {
-      //  PATH = "${tool 'SonarQube_scaner'}/bin:${env.PATH}"
-        DOCKER_IMAGE  = "tahseen176/solar:latest"
+        DOCKER_IMAGE = "tahseen176/solar:latest"
     }
 
     stages {
@@ -22,15 +21,6 @@ pipeline {
                         sh 'npm audit --audit-level=critical'
                     }
                 }
-
-                /* Uncomment to enable OWASP Dependency Check
-                stage('OWASP Dependency Check') {
-                    steps {
-                        dependencyCheck additionalArguments: '''--format ALL
-                        --scan ./
-                        --prettyPrint''', odcInstallation: 'OWASP'
-                    }
-                } */
             }
         }
 
@@ -51,22 +41,6 @@ pipeline {
             }
         }
 
-        /* Uncomment to enable SonarQube Analysis
-        stage('SonarQube Static Analysis') {
-            steps {
-                withSonarQubeEnv('Sonar') {
-                    sh '''
-                    sonar-scanner \
-                        -Dsonar.projectKey=solar-sonar \
-                        -Dsonar.sources=. \
-                        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
-                        -Dsonar.issuesReport.console.enable=true
-                    '''
-                }
-            }
-        }
-        */
-
         stage('Docker Login') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
@@ -80,6 +54,53 @@ pipeline {
                 sh '''
                 docker build -t solar:latest .
                 docker tag solar:latest $DOCKER_IMAGE
+                '''
+            }
+        }
+
+        stage('Trivy Vulnerability Scanner') {
+            steps {
+                sh ''' 
+                trivy image $DOCKER_IMAGE \
+                    --severity LOW,MEDIUM,HIGH \
+                    --exit-code 0 \
+                    --quiet \
+                    --format json -o trivy-image-MEDIUM-results.json
+
+                trivy image $DOCKER_IMAGE \
+                    --severity CRITICAL \
+                    --exit-code 1 \
+                    --quiet \
+                    --format json -o trivy-image-CRITICAL-results.json
+                '''
+            }
+            post {
+                 always {
+                    sh '''
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            --output trivy-image-MEDIUM-results.html trivy-image-MEDIUM-results.json 
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            --output trivy-image-CRITICAL-results.html trivy-image-CRITICAL-results.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                            --output trivy-image-MEDIUM-results.xml  trivy-image-MEDIUM-results.json 
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                            --output trivy-image-CRITICAL-results.xml trivy-image-CRITICAL-results.json          
+                    '''
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                sh '''
+                docker push $DOCKER_IMAGE
                 '''
             }
         }
