@@ -125,7 +125,7 @@ pipeline {
                             echo 'Container stopped and removed.'
                         fi
                         sudo docker run -d --name solar \
-                            -p 3000:3000 -d $DOCKER_IMAGE 
+                            -p 3000:3000  $DOCKER_IMAGE 
                             
                     "
                 '''

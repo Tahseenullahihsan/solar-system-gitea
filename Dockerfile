@@ -7,6 +7,7 @@ COPY package*.json /usr/app/
 RUN npm install
 
 COPY . .
+COPY .env .env
 
 ENV MONGO_URI=uriPlaceholder
 ENV MONGO_USERNAME=usernamePlaceholder
