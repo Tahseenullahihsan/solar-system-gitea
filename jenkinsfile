@@ -110,10 +110,8 @@ pipeline {
                 echo 'Testing the app'
             }
         }
-         stage('Deploy - AWS EC2') {
-            
-            }
-           stage('Deploy - AWS EC2') {
+         
+ stage('Deploy - AWS EC2') {
     steps {
         
         script {
