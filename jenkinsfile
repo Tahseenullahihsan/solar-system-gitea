@@ -4,33 +4,34 @@ pipeline {
         nodejs 'Nodejs22-6-0'
     }
     environment {
-        SONAR_SCANNER_HOME = tool 'SonarQube_scaner';
+      //  PATH = "${tool 'SonarQube_scaner'}/bin:${env.PATH}"
+        DOCKER_IMAGE  = "tahseen176/solar:latest"
     }
 
     stages {
-        stage('installing dependencies') {
+        stage('Installing Dependencies') {
             steps {
                 sh 'npm install --no-audit'
             }
         }
         
-        stage('npm-dependency_parallel') {
+        stage('NPM Dependency Check Parallel') {
             parallel {
-                stage('npm dependency check') {
+                stage('NPM Dependency Check') {
                     steps {
                         sh 'npm audit --audit-level=critical'
                     }
                 }
 
-                // Uncomment if you need OWASP Dependency Check
-                /* stage('OWASP Dependency Check') {
+                /* Uncomment to enable OWASP Dependency Check
+                stage('OWASP Dependency Check') {
                     steps {
                         dependencyCheck additionalArguments: '''--format ALL
                         --scan ./
                         --prettyPrint''', odcInstallation: 'OWASP'
                     }
                 } */
-            } // ✅ Closing parallel block correctly
+            }
         }
 
         stage('Code Coverage') {
@@ -45,17 +46,17 @@ pipeline {
                     reportDir: 'coverage/lcov-report', 
                     reportFiles: 'index.html', 
                     reportName: 'Code Coverage Report', 
-                    reportTitles: '', 
                     useWrapperFileDirectly: true
                 ])
             }
         }
 
-    /*    stage('SonarQube Static Analysis') {
+        /* Uncomment to enable SonarQube Analysis
+        stage('SonarQube Static Analysis') {
             steps {
                 withSonarQubeEnv('Sonar') {
                     sh '''
-                    /var/lib/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube_scaner/bin/sonar-scanner \
+                    sonar-scanner \
                         -Dsonar.projectKey=solar-sonar \
                         -Dsonar.sources=. \
                         -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
@@ -65,13 +66,21 @@ pipeline {
             }
         }
         */
-        stage('Docker image bulid') {
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                }
+            }
+        }
+
+        stage('Docker Build') {
             steps {
                 sh '''
                 docker build -t solar:latest .
-                docker tag solar:latest
+                docker tag solar:latest $DOCKER_IMAGE
                 '''
-
             }
         }
 
