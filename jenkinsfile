@@ -64,6 +64,15 @@ pipeline {
                 }
             }
         }
+        stage('Docker image bulid') {
+            steps {
+                sh '''
+                docker build -t solar:latest .
+                docker tag solar:latest
+                '''
+
+            }
+        }
 
         stage('Test') {
             steps {
