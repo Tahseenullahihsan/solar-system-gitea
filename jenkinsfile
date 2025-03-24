@@ -97,7 +97,13 @@ pipeline {
             }
         }
 
-     
+     stage("push the dokcer iamge") {
+            steps {
+                sh '''
+                docker push $DOCKER_IMAGE
+                '''
+            }
+        }
 
         stage('Test') {
             steps {
