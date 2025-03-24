@@ -3,7 +3,12 @@ pipeline {
     tools {
         nodejs 'Nodejs22-6-0'
     }
+    
+        
     environment {
+        MONGO_URI = credentials('MONGO_URI')          
+        MONGO_USERNAME = credentials('MONGO_USERNAME') 
+        MONGO_PASSWORD = credentials('MONGO_PASSWORD') 
         DOCKER_IMAGE = "tahseen176/solar:latest"
     }
 
@@ -13,6 +18,14 @@ pipeline {
                 sh 'npm install --no-audit'
             }
         }
+        stage('Debug Env Variables') {
+    steps {
+        sh 'echo "MONGO_URI=$MONGO_URI"'
+        sh 'echo "MONGO_USERNAME=$MONGO_USERNAME"'
+        sh 'echo "MONGO_PASSWORD=$MONGO_PASSWORD"'
+    }
+}
+
         
         stage('NPM Dependency Check Parallel') {
             parallel {
