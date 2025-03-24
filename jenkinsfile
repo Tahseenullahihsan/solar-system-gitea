@@ -110,11 +110,35 @@ pipeline {
                 echo 'Testing the app'
             }
         }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the app'
+         stage('Deploy - AWS EC2') {
+            
+            }
+           stage('Deploy - AWS EC2') {
+    steps {
+        
+        script {
+            sshagent(['jwnkins_ssh']) {
+                sh '''
+                    ssh -o StrictHostKeyChecking=no ec2-54-90-141-116.compute-1.amazonaws.com "
+                        echo 'Stopping and removing existing container if any...'
+                        if sudo docker ps -a | grep -q 'solar'; then
+                            echo 'Container found. Stopping...'
+                            sudo docker stop solar && sudo docker rm solar
+                            echo 'Container stopped and removed.'
+                        fi
+                        sudo docker run --name solar \
+                            -p 3000:3000 -d $DOCKER_IMAGE 
+                            
+                    "
+                '''
             }
         }
     }
 }
+
+            
+        }
+
+       
+    }
+
