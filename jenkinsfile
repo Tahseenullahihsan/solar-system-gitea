@@ -10,6 +10,7 @@ pipeline {
         MONGO_USERNAME = credentials('MONGO_USERNAME') 
         MONGO_PASSWORD = credentials('MONGO_PASSWORD') 
         DOCKER_IMAGE = "tahseen176/solar:latest"
+        SONAR_SCANNER_HOME = tool 'sonarqube-scanner';
     }
 
     stages {
@@ -27,11 +28,27 @@ pipeline {
 }
 
         
-        stage('NPM Dependency Check Parallel') {
+         stage('Dependency Scanning') {
             parallel {
-                stage('NPM Dependency Check') {
+                stage('NPM Dependency Audit') {
                     steps {
-                        sh 'npm audit --audit-level=critical'
+                        sh '''
+                            npm audit --audit-level=critical
+                            
+                        '''
+                    }
+                }
+
+                stage('OWASP Dependency Check') {
+                    steps {
+                        dependencyCheck additionalArguments: '''
+                            --scan \'./\' 
+                            --out \'./\'  
+                            --format \'ALL\' 
+                            --disableYarnAudit \
+                            --prettyPrint''', odcInstallation: 'OWASP-DepCheck-10'
+
+                        dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: false
                     }
                 }
             }
@@ -53,6 +70,23 @@ pipeline {
                 ])
             }
         }
+         stage('SAST - SonarQube') {
+            steps {
+                sh 'sleep 5s'
+                 timeout(time: 60, unit: 'SECONDS') {
+                     withSonarQubeEnv('sonar-qube-server') {
+                         sh 'echo $SONAR_SCANNER_HOME'
+                         sh '''
+                             $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                                 -Dsonar.projectKey=Solar-System-Project \
+                                 -Dsonar.sources=app.js \
+                                 -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+                         '''
+                     }
+                     waitForQualityGate abortPipeline: true
+                 }
+            }
+        } 
 
         stage('Docker Login') {
             steps {
