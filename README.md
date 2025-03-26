@@ -1,49 +1,68 @@
-# Solar System NodeJS Application
+# 🌍 Solar System Node.js Application  
 
-A simple HTML+MongoDB+NodeJS project to display Solar System and it's planets.
-
----
-## Requirements
-
-For development, you will only need Node.js and NPM installed in your environement.
-
-### Node
-- #### Node installation on Windows
-
-  Just go on [official Node.js website](https://nodejs.org/) and download the installer.
-Also, be sure to have `git` available in your PATH, `npm` might need it (You can find git [here](https://git-scm.com/)).
-
-- #### Node installation on Ubuntu
-
-  You can install nodejs and npm easily with apt install, just run the following commands.
-
-      $ sudo apt install nodejs
-      $ sudo apt install npm
-
-- #### Other Operating Systems
-  You can find more information about the installation on the [official Node.js website](https://nodejs.org/) and the [official NPM website](https://npmjs.org/).
-
-If the installation was successful, you should be able to run the following command.
-
-    $ node --version
-    v8.11.3
-
-    $ npm --version
-    6.1.0
+A simple **HTML + MongoDB + Node.js** project that displays the **Solar System and its planets**.  
 
 ---
-## Install Dependencies from `package.json`
-    $ npm install
 
-## Run Unit Testing
-    $ npm test
+## 📌 Requirements  
 
-## Run Code Coverage
-    $ npm run coverage
+For development, you will need **Node.js** and **NPM** installed on your system.  
 
-## Run Application
-    $ npm start
+### 🟢 Node.js Installation  
 
-## Access Application on Browser
-    http://localhost:3000/
+#### Windows  
+- Download the installer from the [official Node.js website](https://nodejs.org/).  
+- Ensure `git` is available in your PATH, as `npm` may require it. Get it [here](https://git-scm.com/).  
 
+#### Ubuntu  
+Install Node.js and npm using the following commands:  
+
+```sh
+sudo apt install nodejs  
+sudo apt install npm  
+```  
+
+#### Other Operating Systems  
+- Refer to the [Node.js official website](https://nodejs.org/) and the [NPM official website](https://npmjs.org/) for installation instructions.  
+
+After installation, verify the versions:  
+
+```sh
+node --version  # Example output: v8.11.3  
+npm --version   # Example output: 6.1.0  
+```
+
+---
+
+## 📦 Installing Dependencies  
+Run the following command to install all project dependencies from `package.json`:  
+
+```sh
+npm install  
+```
+
+## 🧪 Running Unit Tests  
+Execute the test suite with:  
+
+```sh
+npm test  
+```
+
+## 📊 Running Code Coverage  
+Generate a coverage report using:  
+
+```sh
+npm run coverage  
+```
+
+## 🚀 Running the Application  
+Start the application with:  
+
+```sh
+npm start  
+```  
+
+## 🌐 Accessing the Application  
+Open your browser and go to:  
+
+👉 **http://localhost:3000/**  
